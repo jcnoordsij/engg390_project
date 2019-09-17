@@ -1,0 +1,196 @@
+{% extends "testplans/base_page.htm" %}
+
+{% load testplans_extras %}
+
+{% block styles %}
+<style>
+
+	#filter-container {
+		background-color:#f0f0f0;
+		margin-bottom:1em;
+		border: 2px #808080 solid;
+		width: fit-content;
+	}
+	
+	#filter-row-container {
+		border-top:1px #808080 dotted;
+		margin-right:.5em;
+		margin-left:.5em;
+		display: inline-block;
+	}
+	
+	.filter {
+		display: inline-block;
+		padding-left: .75em;
+		padding-right: .75em;
+		margin-top: 1em;
+		border-right: 1px #808080 dotted;
+	}
+	
+	h4 {
+		margin-bottom:0em;
+		margin-top:0em;
+	}
+	
+	#id_date_range_0, #id_date_range_1 {
+		width: 130px;
+	}
+</style>
+
+{% endblock styles %}
+
+{% block content %}
+
+
+<h1>Browse Test Plans</h1>
+<div id="filter-container">
+<form action="" method="get">
+
+
+<h4 class="filter" style="margin-left:.5em;">Keyword search</h4>
+<div class="fieldWrapper filter">{{ filterset.form.search.errors }}{{ filterset.form.search }}</div>
+<input style="margin-top:.5em; margin-bottom:.5em; margin-left:.5em;" type="submit" value="go"/><br>
+
+<div id="filter-row-container">
+<h4 class="filter">Filter by</h4>
+
+	{{ filterset.form.non_field_errors }}
+	<div class="fieldWrapper filter" style="padding-left: 0em;">
+		{{ filterset.form.foundry.errors }}
+		<label for="{{ filterset.form.foundry.id_for_label }}">Foundry:</label>
+		{{ filterset.form.foundry }}
+	</div>
+	<div class="fieldWrapper filter">
+		{{ filterset.form.process.errors }}
+		<label for="{{ filterset.form.process.id_for_label }}">Process:</label>
+		{{ filterset.form.process }}
+	</div>
+	<div class="fieldWrapper filter">
+		{{ filterset.form.status.errors }}
+		<label for="{{ filterset.form.status.id_for_label }}">Status:</label>
+		{{ filterset.form.status }}
+	</div>
+	<div class="fieldWrapper filter">
+		{{ filterset.form.archived.errors }}
+		<label for="{{ filterset.form.archived.id_for_label }}">Archived:</label>
+		{{ filterset.form.archived }}
+	</div>
+	<div class="fieldWrapper filter">
+		{{ filterset.form.date_range.errors }}
+		<label for="{{ filterset.form.date_range.id_for_label }}">Date:</label>
+		{{ filterset.form.date_range }}
+	</div>
+	<input style="margin-bottom:.5em; margin-top:.5em ;margin-left:.5em; display:inline-block;" type="submit" value="apply filters"/>
+</div>
+</form>
+</div>
+
+<table class="padded">
+	<tr>
+		<th>Foundry</th>
+		<th>Process</th>
+		<th>Wafer(s)</th>
+		<th>Issue Date</th>
+		<th>Primary Contact</th>
+	</tr>
+{% for testplan in testplans %}
+	<tr class="{% cycle 'odd' 'even' %}">
+
+		<td><a href="{{ testplan.get_absolute_url }}" title="View testplan details">{{ testplan.foundry }}</a></td>
+		<td>{{ testplan.process }}</td>
+		<td>
+			{% for wafer in testplan.wafers.all %}
+			{{ wafer }}<br>
+			{% endfor %}
+		</td>
+		<td>{{ testplan.issue_date|date:"N j, Y" }}</td>
+		<td>{{ testplan.primary_contact }}</td>
+	</tr>	
+{% empty %}
+	</table>
+	<p>No test plans found.</p>
+{% endfor %}
+{% if testplans %}
+	</table>
+	<p>Test plans {{ page_obj.start_index }}—{{ page_obj.end_index }}</p>
+{% endif %}
+
+
+{% if is_paginated %}
+<div class="pagination">
+    <span class="step-links">
+		<p>
+        <span class="current">
+            page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+		</p>
+		<p style="margin-top:1px">
+		{% if page_obj.has_previous %}
+            <a href="?{% param_replace page=page_obj.previous_page_number %}">previous</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?{% param_replace page=page_obj.next_page_number %}">next</a>
+        {% endif %}
+		</p>
+    </span>
+</div>
+{% endif %}
+
+{% endblock content %}
+
+{% block bodyjs %}
+
+<script type="text/javascript">
+
+$(document).ready( function() {
+	
+	$('#id_process').find('option').not(':first').remove();
+	if ($('#id_foundry').val() != "") {
+		$.ajax({
+			url: '{% url 'testplans:get_processes' %}',
+			data: {
+				'_': Date.now(),
+				'foundry_id': $('#id_foundry').val()
+			},
+			dataType: 'json',
+			success: function(data) {
+				data.process_list.forEach( process => {
+					let newProcessOption = new Option(process.name, process.id, false, false);
+					$('#id_process').append(newProcessOption);
+				});
+				$('#id_process').val({{ request.GET.process }});
+			},
+			error: function(error) {
+				window.alert('Failed to load processes!');
+			}
+		});
+	}
+	
+	
+	$('#id_foundry').change(function() {
+		$('#id_process').find('option').not(':first').remove();
+		if ($(this).val() != "") {
+			$.ajax({
+				url: '{% url 'testplans:get_processes' %}',
+				data: {
+					'_': Date.now(),
+					'foundry_id': $(this).val()
+				},
+				dataType: 'json',
+				success: function(data) {
+					data.process_list.forEach( process => {
+						let newProcessOption = new Option(process.name, process.id, false, false);
+						$('#id_process').append(newProcessOption);
+					});
+				},
+				error: function(error) {
+					window.alert('Failed to load processes!');
+				}
+			});
+		}
+	});
+	
+});
+</script>
+
+{% endblock bodyjs %}

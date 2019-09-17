@@ -1,0 +1,25 @@
+{% extends "testplans/base_page.htm" %}
+
+
+{% block styles %}
+
+
+{% endblock styles %}
+
+
+{% block content %}
+
+<h1>Delete Test Plan</h1>
+<form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to delete the test plan for wafer(s) {% for wafer in object.wafers.all %}{% if forloop.first %}{% elif forloop.last %}, and {% else %}, {% endif %}"{{ wafer }}"{% endfor %}?</p>
+    <input type="submit" value="Confirm" />
+</form>
+
+{% endblock content %}
+
+
+{% block bodyjs %}
+
+
+
+{% endblock bodyjs %}

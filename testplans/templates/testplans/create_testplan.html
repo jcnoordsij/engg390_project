@@ -1,0 +1,278 @@
+{% extends "testplans/base_page.htm" %}
+
+{% block htmlheadadd %}
+
+{{ testplan_form.media.css }}
+{% endblock htmlheadadd %}
+
+{% block styles %}
+
+<style>
+
+.inline {
+	display: inline;
+}
+
+.select2-container {
+    width: 25% !important;
+}
+
+.dialog { display: none; }
+
+</style>
+
+{% endblock styles %}
+
+
+{% block content %}
+
+{% block title %}
+<h1>Create New Test Plan</h1>
+{% endblock title %}
+
+<!-- The action attribute changes for the edit view, so we need a block to modify it -->
+{% block testplan_form_tag %}
+<form action="{% url 'testplans:create_testplan' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+{% endblock testplan_form_tag %}
+
+    {{ testplan_testplan_form.non_field_errors }}
+	<div class="fieldWrapper"><p></p>
+		<p class="inline">
+			{{ testplan_form.primary_contact.errors }}
+			<label for="{{ testplan_form.primary_contact.id_for_label }}">Primary Contact:</label>
+			{{ testplan_form.primary_contact }}
+		</p>
+	</div>
+	<div class="fieldWrapper"><p></p>
+		<p class="inline">
+			{{ testplan_form.foundry.errors }}
+			<label for="{{ testplan_form.foundry.id_for_label }}">Foundry:</label>
+			{{ testplan_form.foundry }}
+		</p>
+		<button class="inline" id="foundry-create-button" title="Create foundry">Add new foundry</button>
+	</div>
+	<div class="fieldWrapper"><p></p>
+		<p class="inline">
+			{{ testplan_form.process.errors }}
+			<label for="{{ testplan_form.process.id_for_label }}">Process:</label>
+			{{ testplan_form.process }}
+		</p>
+		<button class="inline" id="process-create-button" title="Create process">Add new process</button>
+	</div>
+	<div class="fieldWrapper"><p></p>
+		<p class="inline">
+			{{ testplan_form.wafers.errors }}
+			<label for="{{ testplan_form.wafers.id_for_label }}">Wafers:</label>
+			{{ testplan_form.wafers }}
+		</p>
+		<button class="inline" id="wafer-create-button" title="Create wafer">Add new wafer</button>
+	</div>
+	<div class="fieldWrapper"><p>
+		{{ testplan_form.s_parameters.errors }}
+		<label for="{{ testplan_form.s_parameters.id_for_label }}">S parameters:</label>
+		{{ testplan_form.s_parameters }}
+	</p></div>
+	<div class="fieldWrapper"><p>
+		{{ testplan_form.pulsed_IV.errors }}
+		<label for="{{ testplan_form.pulsed_IV.id_for_label }}">Pulsed IV:</label>
+		{{ testplan_form.pulsed_IV }}
+	</p></div>
+	<div class="fieldWrapper"><p>
+		{{ testplan_form.load_pull.errors }}
+		<label for="{{ testplan_form.load_pull.id_for_label }}">Load-pull:</label>
+		{{ testplan_form.load_pull }}
+	</p></div>
+	<div class="fieldWrapper"><p>
+		{{ testplan_form.imax_droop.errors }}
+		<label for="{{ testplan_form.imax_droop.id_for_label }}">Imax Droop:</label>
+		{{ testplan_form.imax_droop }}
+	</p></div>
+	<div class="fieldWrapper"><p>
+		{{ testplan_form.status.errors }}
+		<label for="{{ testplan_form.status.id_for_label }}">Status:</label>
+		{{ testplan_form.status }}
+	</p></div>
+	<div class="fieldWrapper">
+		{{ testplan_form.notes.errors }}
+		<p style="margin-bottom:.5em"><label for="{{ testplan_form.notes.id_for_label }}">Notes:</label></p>
+		{{ testplan_form.notes }}
+	</div>
+	<div class="fieldWrapper"><p>
+		{{ testplan_form.file.errors }}
+		<label for="{{ testplan_form.file.id_for_label }}">File:</label>
+		{{ testplan_form.file }}
+	</p></div>
+	{% block restya_block %}
+	<div class="fieldWrapper"><p>
+		{{ testplan_form.create_restya_card.errors }}
+		<label for="{{ testplan_form.create_restya_card.id_for_label }}">Create restyaboard card? </label>
+		{{ testplan_form.create_restya_card }}
+	</p></div>
+	{% endblock restya_block %}
+    <input type="submit" name="submit-testplan" value="Save" />
+</form>
+
+
+<div id="foundry-create-dialog" class='dialog'>
+	{% block foundry_form_tag %}
+	<form action={% url 'testplans:create_testplan' %} method="post">{% csrf_token %}
+	{% endblock foundry_form_tag %}
+		{{ foundry_form.as_p }}
+		<input type="submit" name="submit-foundry" value="Save" />
+	</form>
+</div>
+
+<div id="process-create-dialog" class='dialog'>
+	{% block process_form_tag %}
+	<form action={% url 'testplans:create_testplan' %} method="post">{% csrf_token %}
+	{% endblock process_form_tag %}
+		{{ process_form.as_p }}
+		<input type="submit" name="submit-process" value="Save" />
+	</form>
+</div>
+
+<div id="wafer-create-dialog" class='dialog'>
+	{% block wafer_form_tag %}
+	<form action={% url 'testplans:create_testplan' %} method="post">{% csrf_token %}
+	{% endblock wafer_form_tag %}
+		{{ wafer_form.as_p }}
+		<input type="submit" name="submit-wafer" value="Save" />
+	</form>
+</div>
+
+
+{% endblock content %}
+
+
+{% block bodyjs %}
+
+<script type="text/javascript">
+
+$(document).ready( function() {
+
+	var win_width = $(window).width();
+	var edit_dialog_width = 500;
+	var prompt_dialog_width = 550;
+	if( win_width < (edit_dialog_width+40) )
+		edit_dialog_width = win_width-40;
+	if( win_width < (prompt_dialog_width+40) )
+		prompt_dialog_width = win_width-40;
+	
+
+		
+	
+	
+	$('#id_testplan-foundry').change(function() {
+		$('#id_testplan-wafers').val(null);
+		$('#id_testplan-wafers').empty();
+		$('#id_testplan-process').empty();
+		if ($(this).val() != "") {
+			$.ajax({
+				url: '{% url 'testplans:get_processes' %}',
+				data: {
+					'_': Date.now(),
+					'foundry_id': $(this).val()
+				},
+				dataType: 'json',
+				success: function(data) {
+					data.process_list.forEach( process => {
+						let newProcessOption = new Option(process.name, process.id, false, false);
+						$('#id_testplan-process').append(newProcessOption);
+					});
+					if (data.process_list[0] != undefined) {
+						$('#id_testplan-process').val(data.process_list[0].id);
+						get_wafers(data.process_list[0].id);
+					}
+				},
+				error: function(error) {
+					window.alert('Failed to load processes!');
+				}
+			});
+		}
+	});
+	
+	$('#id_testplan-process').change(function() {
+		$('#id_testplan-wafers').val(null);
+		$('#id_testplan-wafers').empty();
+		if ($(this).val() != "") get_wafers( $(this).val() );
+	});
+	
+	
+	get_wafers = function(process) {
+		$.ajax({
+			url: '{% url 'testplans:get_wafers' %}',
+			data: {
+				'_': Date.now(),
+				'process_id': process
+			},
+			dataType: 'json',
+			success: function(data) {
+				data.wafer_list.forEach( wafer => {
+					let newWaferOption = new Option(wafer.name, wafer.id, false, false);
+					$('#id_testplan-wafers').append(newWaferOption);
+				})
+				$('#id_testplan-wafers').val(null).trigger("change");
+				
+			},
+			error: function(error) {
+				window.alert('Failed to load wafers!');
+			}
+		});
+	}
+		
+	
+	
+		
+	
+	foundry_create_dialog = $('#foundry-create-dialog').dialog({
+		autoOpen: false,
+		height: "auto",
+		width: edit_dialog_width,
+		modal: true,
+		title: 'Create new foundry'
+	});
+	
+	$("#foundry-create-button").click(function() {
+		foundry_create_dialog.dialog('open');
+	});
+
+
+	process_create_dialog = $('#process-create-dialog').dialog({
+		autoOpen: false,
+		height: "auto",
+		width: edit_dialog_width,
+		modal: true
+	});
+	
+	$("#process-create-button").click(function() {
+		if ($('#id_testplan-foundry').val() != "") {
+			process_create_dialog.dialog("option", "title", 'Create new '.concat($("#id_testplan-foundry option:selected" ).text(), ' process'));
+			process_create_dialog.dialog('open');
+			$('#id_process-foundry').val($('#id_testplan-foundry').val());
+		}
+	});
+
+
+	wafer_create_dialog = $('#wafer-create-dialog').dialog({
+		autoOpen: false,
+		height: "auto",
+		width: edit_dialog_width,
+		modal: true
+	});
+	
+	$("#wafer-create-button").click(function() {
+		if ( $('#id_testplan-process').has('option').length > 0 && $('#id_testplan-process').val() != "") {
+			wafer_create_dialog.dialog("option", "title", 'Create new '.concat($("#id_testplan-process option:selected" ).text(), ' wafer'));
+			wafer_create_dialog.dialog('open');
+			$('#id_wafer-process').val($('#id_testplan-process').val());
+		}
+	});
+
+});
+
+
+</script>
+
+{{ testplan_form.media.js }}
+
+{% endblock bodyjs %}

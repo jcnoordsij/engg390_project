@@ -1,0 +1,105 @@
+{% extends "testplans/base_page.htm" %}
+
+
+{% block styles %}
+
+<style>
+	.measurement {
+		background-color: white;
+		border-radius: 4px;
+		height: 2em;
+		padding-left: .5em;
+		padding-right: .5em;
+		display: inline-flex;
+		align-items: center;
+	}
+	
+	#details td {
+		background-color: #f2f2f2;
+		padding: .5em;
+		border: .1px solid white;
+	}
+</style>
+
+{% endblock styles %}
+
+
+{% block content %}
+
+<h1>Test Plan Details</h1>
+
+<table id="details">
+	<tr><td>Primary Contact:</td><td>{{ object.primary_contact }}</td></tr>
+	<tr><td>Foundry:</td><td>{{ object.foundry }}</td></tr>
+	<tr><td>Process</td><td>{{ object.process }}</td></tr>
+	<tr><td>Wafer(s):</td>
+		<td>
+			{% for wafer in object.wafers.all %}
+			{{ wafer }}<br>
+			{% endfor %}
+		</td>
+	</tr>
+	<tr><td><div>Measurements:</div>
+	</td><td>
+		{% if object.s_parameters %}
+			<div class="measurement">
+			<p>
+				{% if object.s_par_config_file %}
+					<a href="{% url 'testplans:download' path=object.s_par_config_file.path %}" title="Download config file">S Parameters</a>
+				{% else %}
+					S Parameters
+				{% endif %}
+			</p>
+			</div>
+		{% endif %}
+		{% if object.pulsed_IV %}
+			<div class="measurement">
+			<p>
+				{% if object.piv_config_file %}
+					<a href="{% url 'testplans:download' path=object.piv_config_file.path %}" title="Download config file">Pulsed IV</a>
+				{% else %}
+					Pulsed IV
+				{% endif %}
+			</p>
+			</div>
+		{% endif %}
+		{% if object.load_pull %}
+			<div  class="measurement"><p>Load Pull</p></div>
+		{% endif %}
+		{% if object.imax_droop %}
+			<div class="measurement">
+			<p>
+				{% if object.imax_droop_config_file %}
+					<a href="{% url 'testplans:download' path=object.imax_droop_config_file.path %}" title="Download config file">Imax Droop</a>
+				{% else %}
+					Imax Droop
+				{% endif %}
+			</p>
+			</div>
+		{% endif %}
+	</td></tr>
+	<tr><td>Notes:</td><td>{% autoescape off %}{{ object.notes }}{% endautoescape %}</td></tr>
+	<tr><td>File:</td><td>
+		{% if object.file %}
+			<a href="{% url 'testplans:download' path=object.file.path %}" title="Download file">{{ object.file.name }} </a>
+		{% endif %}
+	</td></tr>
+</table>
+	
+	<a href="{% url 'testplans:update_testplan' pk=object.pk %}"><p>Edit details</p></a>
+	 
+	{% if testplan.archived  %}
+	<a href="{% url 'testplans:archive_testplan' pk=object.pk to_archive='false' %}"><p>Unarchive this test plan</p></a>
+	{% else %}
+	<a href="{% url 'testplans:archive_testplan' pk=object.pk to_archive='true' %}"><p>Archive this test plan</p></a>
+	{% endif %}
+	 
+	<a href="{% url 'testplans:delete_testplan' pk=object.pk %}"><p>Delete this test plan</p></a>
+
+{% endblock content %}
+
+
+
+
+
+

@@ -1,0 +1,104 @@
+/* Code originally created by Jay Barrett, modified by Carter Noordsij */
+
+/* default styles for HTML elements */
+html {
+  overflow-y: scroll;
+  overflow: -moz-scrollbars-vertical;
+}
+
+body { font-family: tahoma,arial,helvetica,sans-serif; font-size:10pt; background-color:#125b85; }
+h1 { font-size: 16pt; font-weight: bold; }
+h2 { font-size: 16pt; font-weight: normal; }
+h3 { font-size: 14pt; font-weight: normal; border-bottom:1px solid gray; }
+a { text-decoration:underline; color:blue; }
+a:visited { color:blue; }
+a:hover { color:red; }
+
+div { margin:0; padding:0; }
+img { border:0; }
+
+/* styling for the main page elements */
+#pageContainer { min-width:900px; max-width:1350px; background-color:#ffffff; padding:4px; margin:0 auto; }
+#contentTable { width:100%; }
+#contentSidebar { width:180px; vertical-align:top; }
+#contentMain { vertical-align:top; padding:4px 7px; }
+
+/* styling for navigation bar blocks */
+.sidebar { margin:3px; padding:5px; border:1px solid gray; }
+.sidebar h1 { font-weight:normal; font-size:12pt; margin:0; padding:3px 0; }
+ul.links { margin-left:10px; padding:4px 8px 4px 10px; list-style-type:square; }
+ul.links li { padding-left:-5px; }
+.loginbox { background-color:#e0e0e0; }
+.restricted { background-color:#ffdddd; }
+.admin { background-color:#ffffdd; }
+
+/* styling for tables */
+table.fullwidth { width:100%; }
+td.aligntop, th.aligntop { vertical-align:top; }
+th { background-color:#e5eaff; }
+table .odd { background-color:#f0f0f0; }
+table .even { background-color:#e0e0e0; }
+table.padded td, table.padded th { padding:0.1em 0.3em 0.1em 0.3em; }
+
+/* textarea style */
+textarea { font-family:tahoma,arial,helvetica,sans-serif; font-size:10pt; color:#606060; }
+
+/* general styles for elements */
+.highlight { background-color: #ffcc99; border:2px solid red; }
+.note { color:gray; font-style:italic; }
+.boldface { font-weight:bold; }
+.warning { color:red; }
+.helptext { font-style:italic; }
+.label { font-weight:bold; }
+p.compact { margin:0; padding:0; }
+p.important { margin:1em 0.5em; border:2px solid #0055ff; padding:0.3em; }
+p.infoblock { margin:1em 0.5em; border:2px solid #c0c0c0; padding:0.3em; color:#404040; background-color:#e0e0e0; }
+p.very_important, p.critical { margin:1em 0.5em; border:2px solid #ff3344; padding:0.3em; font-weight:bold; color:red; }
+p.padded { padding-left:1em; padding-right:1em }
+p.small { font-size:80% }
+.light { color:#808080; }
+.italic { font-style:itatlic; }
+.indent { margin-left:1em; margin-right:1em; }
+.smaller { font-size:80%; }
+.larger { font-size:120%; }
+input[type=submit], input[type=button] { background-color:#88ff88; border:none; color:#ffffff; margin: 4px 2px; padding:10px 20px; cursor:pointer; }
+input[type=submit]:hover, input[type=button]:hover { background-color:#00b300; }
+
+/* align styles */
+.acenter { text-align:center; }
+.aleft { text-align:left; }
+.aright { text-align:right; }
+
+/* style for grading selection radio boxes */
+.grade_select ul { margin:0;padding:0; }
+.grade_select ul li { list-style-type:none; display:inline; margin:0 0.5em; }
+
+
+/* style for errorlist that comes out of django form validation failures */
+ul.errorlist { display:inline; margin:0.5em; padding:0; }
+ul.errorlist li { list-style-type:none; margin:0; padding:0.2em; font-weight:bold; color:#ff0000; border:1px solid #ff0000; }
+
+/* style for items in the messages area */
+#messageArea p { margin:1em 0.5em; padding:0.3em; }
+#messageArea p.debug { border:1px dotted gray; font-style:italic; background-color:#f0f0f0; }
+#messageArea p.info { border:1px solid gray; background-color:#f0f0f0; }
+#messageArea p.success { border:2px solid #00ff00; color:#00ff00; background-color:#d0ffd0; font-weight:bold; }
+#messageArea p.warning { border:2px solid #ff8800; color:#ff8800; background-color:#ffffaa; font-weight:bold; }
+#messageArea p.error { border:2px solid #ff0000; color:#ff0000; background-color:#ff8888; font-weight:bold; }
+
+.portalheader { font-weight:bold; padding:.3em; text-align:center; margin-bottom:1em; }
+
+/* submission form styles */
+.formfield { margin:1em 0; padding:0.5em; background-color:#cce6ff; border:1px dotted #b3b3cc; }
+
+.action_buton {
+	width: 40px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	background-color: #404040;
+	color: #f2f2f2;
+}
+
+
+

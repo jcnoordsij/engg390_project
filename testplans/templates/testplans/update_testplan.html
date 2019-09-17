@@ -1,0 +1,26 @@
+{% extends "testplans/create_testplan.html" %}
+
+
+{% block title %}
+<h1>Edit Test Plan</h1>
+{% endblock title %}
+
+
+{% block testplan_form_tag %}
+<form action="{% url 'testplans:update_testplan' pk=pk %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+{% endblock testplan_form_tag %}
+
+{% block foundry_form_tag %}
+<form action={% url 'testplans:update_testplan' pk=pk %} method="post">{% csrf_token %}
+{% endblock foundry_form_tag %}
+
+{% block process_form_tag %}
+<form action={% url 'testplans:update_testplan' pk=pk %} method="post">{% csrf_token %}
+{% endblock process_form_tag %}
+
+{% block wafer_form_tag %}
+<form action={% url 'testplans:update_testplan' pk=pk %} method="post">{% csrf_token %}
+{% endblock wafer_form_tag %}
+
+{% block restya_block %}
+{% endblock restya_block %}

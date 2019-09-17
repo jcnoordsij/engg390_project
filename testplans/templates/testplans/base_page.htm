@@ -1,0 +1,118 @@
+<!-- Originally created by Jay Barrett, modified by Carter Noordsij -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+{% block htmlhead %}
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Expires" content="31 Dec 2000 00:00:00 GMT" />
+
+{% load static %}
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'testplans/testplans_theme.css' %}" />
+
+{% block styles %}{# placeholder for page-specific styling to be added #}{% endblock styles %}
+
+<script type="text/javascript" src="{% static 'testplans/js/jquery-3.4.1.js' %}"></script>
+<script type="text/javascript" src="{% static 'testplans/js/jquery-ui.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'testplans/js/jquery-ui.css' %}" />
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+<!-- fix for IE9 stupid compatibility mode issues with jQuery -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+{% endblock htmlhead %}
+{% block htmlheadadd %}{# placeholder for additional HTML header information to be added #}{% endblock htmlheadadd %}
+<title>{% block titlebase %}Test Plans{% endblock titlebase %}{% block titletext %}{% endblock titletext %}</title>
+</head>
+
+<body>
+{% block bodyjs %}{# placeholder for javascript to be added to the body #}{% endblock bodyjs %}
+
+<!-- MAIN PAGE CONTAINER -->
+<div id="pageContainer">
+
+<!-- HEADER SECTION -->
+<div id="contentHeader">
+{% block header %}
+   <div id="headerBar">
+     <div class="header">
+         <table class="fullwidth">
+            <col width="220px"></col>
+           <tr>
+             <td style="text-align:center;"><img src="{% static 'testplans/images/MACOM.png' %}" alt="MACOM" width="200" /></td>
+             <td style="text-align:center;"><img src="{% static 'testplans/images/modeling-logo.png' %}" alt="Modeling Group" width="455" /></td>
+           </tr>
+         </table>
+     </div>
+   </div>
+{% endblock header %}
+</div><!-- end of HEADER SECTION -->
+
+<!-- MAIN CONTENT SECTION, contains the content and sidebar(s) -->
+<div id="contentContainer">
+  <table id="contentTable"><tr>
+  <!-- Sidebar -->
+  <td id="contentSidebar">
+  
+    {% block sidebar %}
+    <!-- sidebar panel-->
+    
+    <div class="sidebar">
+      <h1>navigation</h1>
+      <ul class="links">
+        <li class="links"><a href="{% url 'testplans:testplan_list' %}" title="View Test Plans">Browse Test Plans</a></li>
+		<li class="links"><a href="{% url 'testplans:create_testplan' %}" title="Create New Test Plan">Create New Test Plan</a></li>
+      </ul>
+	  <h1>other places</h1>
+	  <ul class="links">
+	    <li class="links"><a href="#####" title="Modeling Home">Modeling Home</a></li>
+		<li class="links"><a href="#####" title="Restyaboard">Restyaboard</a></li>
+	  </ul>
+    </div>
+    
+    {% endblock sidebar %}
+    
+
+  </td><!-- end of Sidebar -->
+  
+  <!-- Main Content Area -->
+  <td id="contentMain">
+    {% block portalheader %}{# placeholder for a portal header bar #}{% endblock portalheader %}
+  
+  {% block content %}
+    <p>Content goes here.</p>
+  {% endblock content %}
+  </td><!-- end of Main Content Area -->
+
+  </tr></table>  
+</div><!-- end of MAIN CONTENT SECTION -->
+
+<!-- FOOTER SECTION -->
+<div id="contentFooter">
+{% block footer %}
+  <div class="footer">
+  <p>
+      <table class="fullwidth">
+               <col width="220px"></col>
+               <tr>
+               </tr> 
+      </table>
+  </p>
+  
+  <p class="small padded">Problems? Contact <a href="#####">Jay Barrett</a></p>
+
+  </div>
+{% endblock footer %}
+</div><!-- end of FOOTER SECTION -->
+
+</div>
+<!-- </script> -->
+
+</body>
+</html>
