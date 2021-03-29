@@ -1,2 +1,2 @@
-# ENGG 390 Project
-This is the code I created for the test plans app that I implemented as part of my ENGG 390 project.
+# Test plan tracker
+This is the test plan tracking app that I implemented while interning at Macom Technology Solutions. This was my first Django app.
